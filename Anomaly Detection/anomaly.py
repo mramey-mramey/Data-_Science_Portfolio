@@ -49,14 +49,14 @@ start = time.time()
 YEAR = sys.argv[1]
 MONTH = sys.argv[2]
 
-conn = create_engine('oracle+cx_oracle://pkarunanidhi:Winter#2019@10.19.136.13:1526/subprd')
+conn = create_engine('oracle+cx_oracle://')
 
-table = "select * from MSS_STG.SEL_TRNSCTN_HIST Where CTFF_DT = '30-APR-19'"
+table = ""
 
-dfName = 'SEL_TRNSCTN_HIST_'+MONTH+YEAR+'_Anomaly.csv'
+dfName = 'TRNSCTN_HIST_'+MONTH+YEAR+'_Anomaly.csv'
 
 print('Starting Data Load')
-SEL_TRNSCTN_HIST = pd.read_sql(table, con=conn)
+TRNSCTN_HIST = pd.read_sql(table, con=conn)
 conn.dispose()
 endRead = time.time()
 print(endRead - start)
@@ -67,10 +67,10 @@ print('*****************Finish Loading ...*********************')
 
 print('*****************Running Model ...*********************')
 
-TRNSCTN_TYP_list = list(SEL_TRNSCTN_HIST['trnsctn_typ'].unique())
-final_result = process_EE(SEL_TRNSCTN_HIST, TRNSCTN_TYP_list[0], 0.0001)
+TRNSCTN_TYP_list = list(TRNSCTN_HIST['trnsctn_typ'].unique())
+final_result = process_EE(TRNSCTN_HIST, TRNSCTN_TYP_list[0], 0.0001)
 for i in range(1, len(TRNSCTN_TYP_list)-1):
-    each_res = process_EE(SEL_TRNSCTN_HIST, TRNSCTN_TYP_list[i], 0.0001)
+    each_res = process_EE(TRNSCTN_HIST, TRNSCTN_TYP_list[i], 0.0001)
     final_result = pd.concat([each_res, final_result], ignore_index=True)
 
 print('*****************Finish Running ...*********************')
@@ -84,14 +84,6 @@ print('*****************'+str(len(anomaly))+' Anomalies Found...****************
 end = time.time()
 print(end - start)
 print('Program Finished')
-
-
-
-
-
-
-
-
 
 
 
