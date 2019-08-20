@@ -26,16 +26,14 @@ print('Starting DQ LOG')
 #Directory for the validation scripts
 directory = ('/informatica/dev/infa_shared/Subledger/Scripts/Python')
 
-#Putty command for send Mail script
-sendMail = '/informatica/dev/infa_shared/Subledger/Scripts/ODSValidationMail.ksh ' + bus_date
+
 
 #Putty command for DQ
-dq = '/informatica/dev/infa_shared/Subledger/Scripts/DQLog.ksh 0 DQL DQL 41 ' + bus_date
-subprocess.run(dq, shell = True)
+dq =
 
 #Create DB connection and run dq validation query
-conn_rfs_dev = create_engine('oracle+cx_oracle://MSS_STG:Summer#2019@10.19.136.11:1526/subdev')                             
-dq_query = ("SELECT COUNT(*) FROM RSTMNT_ODS.DQ_LOG A LEFT OUTER JOIN RSTMNT_ODS.REF_ERR_SET B ON A.ERR_CD = B.ERR_CD LEFT OUTER JOIN RSTMNT_ODS.REF_DQ_RUL D  ON A.DQ_RUL_ID = D.DQ_RUL_ID WHERE PRCSS_DT = TO_DATE('#BUSDATE#','YYYYMMDD')  AND B.ERR_SEV_CD = 1  AND A.BTCH_CR_RUN_ID = (SELECT MAX(BTCH_CR_RUN_ID) FROM RSTMNT_ODS.DQ_LOG T WHERE T.PRCSS_DT = A.PRCSS_DT) AND PRCSS_DT BETWEEN B.EFCTV_START_DT AND B.EFCTV_END_DT AND D.ACTV_FLG = 'Y' AND PRMRY_KEY_VAL <> 500293782")
+conn_rfs_dev = create_engine('oracle+cx_oracle:/)                            
+dq_query = ()
 dq_query = dq_query.replace("#BUSDATE#",bus_date)                            
 dq_log = pd.read_sql(dq_query, con = conn_rfs_dev)
 
@@ -64,12 +62,12 @@ for i in range(1):
 
 
     #Start ODS Load if there are no Sev 1 errors
-    nohup_ods = 'nohup ksh /informatica/dev/infa_shared/Subledger/Scripts/ODSMonthlyLoad.ksh ODS ' + bus_date
+    nohup_ods = ()
     enter = ''    
     subprocess.run(nohup_ods, shell = True) 
     
     #Check ODS load status for failures every 5 minutes 
-    ODS_status_sql = "SELECT distinct b.STTS_CD FROM rstmnt_ods.prcss_adt A  JOIN rstmnt_ODS.feed_cntrl b ON A.feed_cntrl_id = b.feed_cntrl_id where b.PRCSS_DT = to_date('#BUSDATE#','YYYYMMDD') and a.btch_cr_ts > sysdate -1/24 and b.FEED_TYP_CD in ('ODS','ODCT','CTTU','CTRC','CTCL','CTFL','CTFC','CTLQ','ALAR','CNTN','SLTN','CNLD','SLLD','SL','CN')"
+    ODS_status_sql = ()
     ODS_status_sql = ODS_status_sql.replace("#BUSDATE#",bus_date)
     ODS_status = pd.read_sql(ODS_status_sql, con = conn_rfs_dev)                               
                   
@@ -77,7 +75,7 @@ for i in range(1):
     while ODS_status.empty:
         print('Checking ODS load status in 5 minutes')
         time.sleep(300)
-        ODS_status = pd.read_sql(ODS_status_sql, con = conn_rfs_dev)
+        ODS_status = pd.read_sql(ODS_status_sql
         idx2 += 1
         if idx2 > 16:
             print('ODS Load failed!')
@@ -85,10 +83,10 @@ for i in range(1):
             sys.exit()  
         
     #Connect to database
-    conn_rfs_dev = create_engine('oracle+cx_oracle://MSS_STG:Summer#2019@10.19.136.11:1526/subdev')
+    conn_rfs_dev = create_engine('oracle+cx_oracle://)
     
     #Validation query to check if ODS Load is successful
-    ods_load_validation = "select distinct A.STTS_CD from rstmnt_ods.prcss_adt A JOIN rstmnt_ods.feed_cntrl b ON a.feed_cntrl_id = b.feed_cntrl_id where prcss_nm like '%\_EXT' ESCAPE '\\' and prcss_dt = to_date('#BUSDATE#','YYYYMMDD')"
+    ods_load_validation = ()
     ods_load_validation = ods_load_validation.replace("#BUSDATE#",bus_date)
                                                       
     #Read in validation query into a dataframe
@@ -140,14 +138,14 @@ for i in range(1):
                         errors.append(qry_desc)                    
 
         errors2 = pd.Series(errors)
-        errors2.to_csv('/informatica/dev/infa_shared/Subledger/SrcFiles/ODS_Validations_Failed_'+bus_date +'.csv',index=False, header = False)  
+        errors2.to_csv('() 
         subprocess.run(sendMail, shell = True)
         
     # If ODS Load fails, create CSV and send mail
     else:
         print('--------------ODS Load Error----------------')
         errors2 = pd.Series()
-        errors2.to_csv('/informatica/dev/infa_shared/Subledger/SrcFiles/ODS_Validations_Failed_'+bus_date +'.csv',index=False, header = False)  
+        errors2.to_csv() 
         subprocess.run(sendMail, shell = True)
 
     
