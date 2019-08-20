@@ -9,7 +9,7 @@ import string
 
 ctff_dt = input("Please enter Business Date in YYYYMMDD format: ")
 print("The business date your entered is:", ctff_dt)
-directory = (r'/informatica/dev/infa_shared/Subledger/Scripts/Python')
+directory = (r'')
 
 
 ##############################################################################################################
@@ -21,7 +21,7 @@ conn_rfs_sit = create_engine('oracle+cx_oracle://db connection details')
 conn_rfs_prd = create_engine('oracle+cx_oracle://db connection details') 
 
 #Dictionary for PK's 
-pk_dict = {'SEL_TRNSCTN_HIST' : ['stg_trnsctn_id','ctff_dt'], 'SPLMNTL_ASST_STTS_OVRRD' : ['mss_loan_id', 'efctv_end_dt'], 'SEL_ARM': ['stg_arm_id'], 'SEL_LTGTN': ['mss_loan_id','ctff_dt','case_id', 'ltgtn_rsn_cd'], 'SEL_PRPTY_VALTN':['mss_loan_id','stg_valtn_id'], 'CAR_TRNSCTN_HIST':['car_trnsctn_id'], 'CAR_FEE_ACTVTY':['cn_fee_actvty_id'], 'CAR_FEE_DTL' : ['cn_fee_dtl_id'], 'CAR_CLM' : ['init_clm_fild_dt','ctff_dt', 'mss_loan_id'], 'CAR_CLM_SSPNSN':['mss_loan_id', 'ctff_dt', 'clm_sspnsn_start_dt'], 'CAR_CLM_RESBMT':['mss_loan_id', 'snpsht_dt', 'resbmt_dt']   }                             
+pk_dict =                          
                              
 
 #Loop thru files in the directory to get SQL queries                             
@@ -46,8 +46,8 @@ for file in os.listdir(directory):
         print('Starting Data Load...')
          
 		#Ready query into a dataframe 
-        df1 = pd.read_sql(query, con=conn_rfs_sit)
-        df2 = pd.read_sql(query, con=conn_rfs_prd)
+        df1 = pd.read_sql(query, con)
+        df2 = pd.read_sql(query, con)
         
         end = time.time()
         x = ('Data Load Time: ')
@@ -63,7 +63,7 @@ for file in os.listdir(directory):
         print('Starting Compare...')
                 
 
-        if tbl_nm == 'CAR_TRNSCTN_HIST':
+        if tbl_nm == '':
             df2.new_ctff_dt = df2.new_ctff_dt.astype(object)
             df1.new_ctff_dt = df1.new_ctff_dt.astype(object)
             df_merge2 = df1.merge(df2,indicator = True, how='outer')
