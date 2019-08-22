@@ -15,21 +15,32 @@ predictors = df.loc[:,'A1':'A15']
 
 
 #Fitting the model
-clf = SVC(gamma='auto', C= 0.0001, kernel = 'linear')
+clf = SVC(gamma='scale', kernel = 'linear')
+clf_rbf_auto = SVC(gamma = 'auto')
+clf_rbf_scale = SVC(gamma = 'scale')
 Y = np.array(clssfr)
 Y = np.reshape(Y, (654,))
 y = Y
 X = np.array(predictors)
-clf.fit(X, Y) 
-
+model_linear = clf.fit(X, Y) 
+model_rbf_auto = clf_rbf_auto.fit(X,Y)
+model_rbf_scale = clf_rbf_scale.fit(X,Y)
 
 # Perform classification on samples in X.
-prediction = clf.predict(X)
+y_prediction = clf.predict(X)
+
 
 # Returns the mean accuracy on the given test data and labels.
-training_error = clf.fit(X, Y).score(X, Y)
+linear_training_error = model_linear.score(X, Y)
+print(linear_training_error)
+#0.8516819571865444
+rbf_score = model_rbf_auto.score(X,Y)
+print(rbf_score)
+#0.9938837920489296
+rbf2_score = model_rbf_scale.score(X,Y)
+print(rbf2_score)
+#0.6605504587155964
 
-params = clf.fit(X,Y).get_params()
 
 # Weights assigned to the features
 print('w = ',clf.coef_)
