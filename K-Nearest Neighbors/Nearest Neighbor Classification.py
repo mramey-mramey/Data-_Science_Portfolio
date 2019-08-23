@@ -68,3 +68,32 @@ xnl = len(x_new)
 
 for i in range(0,xnl):
     print(classes[y_predict[i]])
+ 
+    
+# Evaluating the Algorithm
+knn = KNeighborsClassifier(n_neighbors=8)  
+knn.fit(X_train,y_train) 
+y_pred = knn.predict(X_test)
+from sklearn.metrics import classification_report, confusion_matrix
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+error = []
+
+# Calculating error for K values between 1 and 40
+for i in range(1, 40):
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train, y_train)
+    pred_i = knn.predict(X_test)
+    error.append(np.mean(pred_i != y_test))
+
+# Plots the mean error. Lower the better
+plt.figure(figsize=(12, 6))
+plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o',
+         markerfacecolor='blue', markersize=10)
+plt.title('Error Rate K Value')
+plt.xlabel('K Value')
+plt.ylabel('Mean Error')
+
+
